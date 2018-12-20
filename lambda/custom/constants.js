@@ -11,17 +11,19 @@ const persistentAttributesAtStart = {
 
 // this is useful for keeping track of what's in the menu
 // good for cards, or help, etc...
-// const menuItems = ['item 1', 'item 2', 'item 3', 'item 4'];
+const languages = ['English', 'British', 'French', 'German'];
 
 const responses = {
   launchResponse: {
-    speechText: 'Would you like me to say "hello world"?',
+    firstUse: 'Welcome to the flash briefing demo.',
+    speechText:
+      'You can hear the demo in several different language models, they are; ',
     // cardParams: { cardTitle: 'Title', cardBody: 'Card Body' },
   },
   helpResponse: {
     speechText:
-      'I sent a sample card to your device. Say "exit" to quit, or "hello world" to hear me say "hello world".',
-    cardParams: { cardTitle: 'HELP', cardBody: 'Card Body' },
+      'You can get your demo response in several language models. Just say one of the following language models: ',
+    // cardParams: { cardTitle: 'HELP', cardBody: 'Card Body' },
   },
   fallbackResponse: {
     speechText:
@@ -34,10 +36,10 @@ const phrasePool = {
   salutation: [
     '<say-as interpret-as="interjection">Aloha</say-as>, welcome back!',
     '<say-as interpret-as="interjection">Bazinga</say-as>, welcome back!',
-    '<say-as interpret-as="interjection">Hip hip hooray</say-as> , Great to see you back!',
-    '<say-as interpret-as="interjection">Howdy</say-as> , Good to see you!',
-    '<say-as interpret-as="interjection">Oh boy</say-as> , here we go!',
-    '<say-as interpret-as="interjection">Spoiler alert</say-as> , this skill is awesome!',
+    '<say-as interpret-as="interjection">Hip hip hooray</say-as>, Great to see you back!',
+    '<say-as interpret-as="interjection">Howdy</say-as>, Good to see you!',
+    '<say-as interpret-as="interjection">Oh boy</say-as>, here we go!',
+    '<say-as interpret-as="interjection">Spoiler alert</say-as>, this demo is awesome!',
   ],
   valediction: [
     '<say-as interpret-as="interjection">Arrivederci</say-as>',
@@ -61,10 +63,44 @@ const phrasePool = {
   ],
 };
 
+const hints = [
+  'my language model is ',
+  'could you please play this in ',
+  'i would like this in ',
+  'please play in ',
+  'i would like to hear this in ',
+  'play it in ',
+];
+
+const audio = {
+  english: {
+    url:
+      'https://feeds.soundcloud.com/stream/547269666-mark-carpenter-6-en-us-au-apple-music-new-releases.mp3',
+    token: '001',
+  },
+  brittish: {
+    url:
+      'https://feeds.soundcloud.com/stream/547267650-mark-carpenter-6-en-gb-us-ios-apps-top-free-ipad.mp3',
+    token: '002',
+  },
+  french: {
+    url:
+      'https://feeds.soundcloud.com/stream/547287912-mark-carpenter-6-fr-fr-ca-apple-music-top-albums.mp3',
+    token: '003',
+  },
+  german: {
+    url:
+      'https://feeds.soundcloud.com/stream/547287459-mark-carpenter-6-de-de-ca-apple-music-top-albums.mp3',
+    token: '004',
+  },
+};
+
 module.exports = {
   skill,
-  // menuItems,
+  languages,
   responses,
   phrasePool,
   persistentAttributesAtStart,
+  hints,
+  audio,
 };

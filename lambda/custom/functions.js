@@ -1,4 +1,12 @@
 // >>> Start: Alexa Specific Functions <<< //
+
+const getLanguageString = languages => {
+  const names = languages.map(x => x);
+  names.splice(languages.length - 1, 0, 'or');
+  const languageString = `${names.join(', ')}`;
+  return languageString;
+};
+
 /* eslint-disable */
 function getSlotValues(filledSlots) {
   const slotValues = {};
@@ -119,6 +127,7 @@ const shuffle = a => {
 /* eslint-enable */
 
 module.exports = {
+  getLanguageString,
   getSlotValues,
   supportsDisplay,
   shuffle,

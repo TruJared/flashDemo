@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "my template",
+      "invocationName": "flash demo",
       "intents": [
         {
           "name": "AMAZON.FallbackIntent",
@@ -93,11 +93,114 @@
           "samples": ["reset the skill"]
         },
         {
-          "name": "HelloWorldIntent",
-          "samples": ["hello world", "say hello world", "what is hello world"],
-          "slots": []
+          "name": "PickLanguageIntent",
+          "slots": [
+            {
+              "name": "language",
+              "type": "AMAZON.Language",
+              "samples": [
+                "my language is {language}",
+                "in {language} please",
+                " in {language}",
+                "{language} is what I would like to hear this in",
+                "could you please play this in {language}",
+                "i would like this in {language}",
+                "please play in {language}",
+                "i would like to hear this in {language}",
+                "play it in {language}",
+                "{language}"
+              ]
+            }
+          ],
+          "samples": [
+            "my language is {language}",
+            "in {language} please",
+            " in {language}",
+            "{language} is what I would like to hear this in",
+            "could you please play this in {language}",
+            "i would like this in {language}",
+            "please play in {language}",
+            "i would like to hear this in {language}",
+            "play it in {language}",
+            "{language}"
+          ]
+        }
+      ],
+      "types": []
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "PickLanguageIntent",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.PickLanguage"
+          },
+          "slots": [
+            {
+              "name": "language",
+              "type": "AMAZON.Language",
+              "confirmationRequired": false,
+              "elicitationRequired": true,
+              "prompts": {
+                "elicitation": "Elicit.Slot.PickLanguage.Language"
+              }
+            }
+          ]
         }
       ]
-    }
+    },
+    "prompts": [
+      {
+        "id": "Confirm.Intent.PickLanguage",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "You said {language} correct?"
+          },
+          {
+            "type": "PlainText",
+            "value": "You would like the demo in {language} ?"
+          },
+          {
+            "type": "PlainText",
+            "value": "You would like to hear the demo in {language} ?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Did you say {language} ?"
+          },
+          {
+            "type": "PlainText",
+            "value": "I heard you say {language} , is that correct?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.PickLanguage.Language",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "I can play the demo in several different language models, which language model would you like to hear?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Could you please let me know which language model you would like to hear this in?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Please tell me the language model you would like to hear the demo in."
+          },
+          {
+            "type": "PlainText",
+            "value": "What language model can I play this demo in?"
+          },
+          {
+            "type": "PlainText",
+            "value": "What language model did you want to hear this in?"
+          }
+        ]
+      }
+    ]
   }
 }

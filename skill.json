@@ -9,7 +9,7 @@
             "Alexa tell hello world hello",
             "Alexa ask hello world say hello"
           ],
-          "name": "alexaTemplate",
+          "name": "flash demo",
           "description": "Sample Full Description"
         }
       },
@@ -22,7 +22,12 @@
       "custom": {
         "endpoint": {
           "sourceDir": "lambda/custom"
-        }
+        },
+        "interfaces": [
+          {
+            "type": "AUDIO_PLAYER"
+          }
+        ]
       }
     },
     "manifestVersion": "1.0"
