@@ -31,8 +31,8 @@ const LaunchRequestHandler = {
     persistentAttributes.repeatText =
       'Which language model would you like to hear this in?';
 
-    // * set persistentAttributes to sessionAttributes * //
-    attributesManager.setSessionAttributes(persistentAttributes);
+    // * just save it here: not used anywhere else * //
+    await attributesManager.savePersistentAttributes();
 
     return responseBuilder
       .speak(
@@ -73,23 +73,21 @@ const PickLanguageInfoCompleted = {
   },
   async handle(handlerInput) {
     const { attributesManager, responseBuilder } = handlerInput;
-    const sessionAttributes = attributesManager.getSessionAttributes();
     const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
     const slotValues = functions.getSlotValues(filledSlots);
     console.log(JSON.stringify(slotValues));
 
     const resolvedLanguage = slotValues.language.resolved;
-    const language = constants.languages.includes(
-      resolvedLanguage.toLowerCase()
-    )
-      ? resolvedLanguage.toLowerCase()
-      : 'english';
-    const { url, token } = constants.audio[language.toLowerCase()];
-    attributesManager.setPersistentAttributes(sessionAttributes);
-    await attributesManager.savePersistentAttributes();
+    const language = constants.languages.includes(resolvedLanguage)
+      ? resolvedLanguage
+      : 'English';
+    const { url, token } = constants.audio[language];
+
+    console.log(`language ${language} url ${url} `);
 
     return responseBuilder
       .speak()
+      .withShouldEndSession(true)
       .addAudioPlayerPlayDirective('REPLACE_ALL', url, token, 0, null)
       .getResponse();
   },
@@ -219,10 +217,7 @@ const ResetIntentHandler = {
       constants.persistentAttributesAtStart
     );
     await attributesManager.savePersistentAttributes();
-    return responseBuilder
-      .speak('Skill is reset. Good-bye')
-      .addAudioPlayerStopDirective()
-      .getResponse();
+    return responseBuilder.speak('Skill is reset. Good-bye').getResponse();
   },
 };
 
@@ -269,10 +264,7 @@ const CancelAndStopIntentHandler = {
     await attributesManager.savePersistentAttributes();
 
     console.log('user stopped, or canceled some request');
-    return responseBuilder
-      .speak('')
-      .addAudioPlayerStopDirective()
-      .getResponse();
+    return responseBuilder.speak('').getResponse();
   },
 };
 
@@ -308,10 +300,7 @@ const ErrorHandler = {
 
     attributesManager.setPersistentAttributes(sessionAttributes);
     await attributesManager.savePersistentAttributes();
-    return responseBuilder
-      .speak(speechText)
-      .addAudioPlayerStopDirective()
-      .getResponse();
+    return responseBuilder.speak(speechText).getResponse();
   },
 };
 

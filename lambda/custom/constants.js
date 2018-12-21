@@ -73,22 +73,22 @@ const hints = [
 ];
 
 const audio = {
-  english: {
+  English: {
     url:
       'https://feeds.soundcloud.com/stream/547269666-mark-carpenter-6-en-us-au-apple-music-new-releases.mp3',
     token: '001',
   },
-  brittish: {
+  Brittish: {
     url:
       'https://feeds.soundcloud.com/stream/547267650-mark-carpenter-6-en-gb-us-ios-apps-top-free-ipad.mp3',
     token: '002',
   },
-  french: {
+  French: {
     url:
       'https://feeds.soundcloud.com/stream/547287912-mark-carpenter-6-fr-fr-ca-apple-music-top-albums.mp3',
     token: '003',
   },
-  german: {
+  German: {
     url:
       'https://feeds.soundcloud.com/stream/547287459-mark-carpenter-6-de-de-ca-apple-music-top-albums.mp3',
     token: '004',
