@@ -61,15 +61,6 @@ const phrasePool = {
   ],
 };
 
-const hints = [
-  'my language model is ',
-  'could you please play this in ',
-  'i would like this in ',
-  'please play in ',
-  'i would like to hear this in ',
-  'play it in ',
-];
-
 const audio = {
   American: {
     url:
@@ -104,6 +95,5 @@ module.exports = {
   responses,
   phrasePool,
   persistentAttributesAtStart,
-  hints,
   audio,
 };

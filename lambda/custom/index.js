@@ -56,8 +56,6 @@ const PickLanguageInProgress = {
   },
   async handle(handlerInput) {
     const { responseBuilder } = handlerInput;
-    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-    sessionAttributes.passTo = false;
 
     return responseBuilder.addDelegateDirective().getResponse();
   },
@@ -72,6 +70,9 @@ const PickLanguageInfoCompleted = {
     );
   },
   async handle(handlerInput) {
+    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+    sessionAttributes.passTo = false;
+
     return PlayTrackIntentHandler.handle(handlerInput);
   },
 };
@@ -85,7 +86,7 @@ const PlayTrackIntentHandler = {
     );
   },
   async handle(handlerInput) {
-    const { attributesManager, responseBuilder } = handlerInput;
+    const { responseBuilder } = handlerInput;
     const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
     const slotValues = functions.getSlotValues(filledSlots);
     console.log(JSON.stringify(slotValues));
@@ -93,9 +94,8 @@ const PlayTrackIntentHandler = {
     const resolvedLanguage = slotValues.language.resolved;
     const language = constants.languages.includes(resolvedLanguage)
       ? resolvedLanguage
-      : 'English';
+      : 'American';
     const { url, token } = constants.audio[language];
-
     console.log(`language ${language} url ${url} `);
 
     return responseBuilder
@@ -246,12 +246,10 @@ const FallBackHandler = {
     const { responseBuilder } = handlerInput;
     const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
     const speechText = functions.shuffle(constants.phrasePool.fallback)[0];
-    const hint =
-      sessionAttributes.passTo === 'PickLanguageIntent'
-        ? `You could start off your choice by saying ${
-            functions.shuffle(constants.hints)[0]
-          }`
-        : '';
+    const { languages } = constants;
+    const languageString = functions.getLanguageString(languages);
+
+    const hint = `Your language model choices are ${languageString}`;
 
     return responseBuilder
       .speak(`${speechText}<break time='0.25s' />. ${hint}`)
