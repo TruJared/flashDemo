@@ -72,6 +72,19 @@ const PickLanguageInfoCompleted = {
     );
   },
   async handle(handlerInput) {
+    return PlayTrackIntentHandler.handle(handlerInput);
+  },
+};
+
+const PlayTrackIntentHandler = {
+  canHandle(handlerInput) {
+    const { request } = handlerInput.requestEnvelope;
+    return (
+      request.type === 'IntentRequest' &&
+      request.intent.name === 'PlayTrackIntent'
+    );
+  },
+  async handle(handlerInput) {
     const { attributesManager, responseBuilder } = handlerInput;
     const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
     const slotValues = functions.getSlotValues(filledSlots);
@@ -258,13 +271,14 @@ const CancelAndStopIntentHandler = {
     );
   },
   async handle(handlerInput) {
-    const { attributesManager, responseBuilder } = handlerInput;
-    const sessionAttributes = attributesManager.getSessionAttributes();
-    attributesManager.setPersistentAttributes(sessionAttributes);
-    await attributesManager.savePersistentAttributes();
+    const { responseBuilder } = handlerInput;
 
     console.log('user stopped, or canceled some request');
-    return responseBuilder.speak('').getResponse();
+
+    return responseBuilder
+      .speak('')
+      .addAudioPlayerStopDirective()
+      .getResponse();
   },
 };
 
@@ -286,8 +300,7 @@ const ErrorHandler = {
     return true;
   },
   async handle(handlerInput, error) {
-    const { attributesManager, responseBuilder } = handlerInput;
-    const sessionAttributes = attributesManager.getSessionAttributes();
+    const { responseBuilder } = handlerInput;
     console.log(`Error handled: ${error}`);
     console.log(
       `Session ended with reason >> ${
@@ -297,9 +310,6 @@ const ErrorHandler = {
     );
     const speechText =
       'There appears to be something wrong. Please try again in a few moments';
-
-    attributesManager.setPersistentAttributes(sessionAttributes);
-    await attributesManager.savePersistentAttributes();
     return responseBuilder.speak(speechText).getResponse();
   },
 };
@@ -336,6 +346,7 @@ exports.handler = skillBuilder
     HelpIntentHandler,
     PickLanguageInProgress,
     PickLanguageInfoCompleted,
+    PlayTrackIntentHandler,
     YesIntentHandler,
     NoIntentHandler,
     RepeatIntentHandler,

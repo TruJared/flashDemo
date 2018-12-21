@@ -97,7 +97,7 @@
           "slots": [
             {
               "name": "language",
-              "type": "AMAZON.Language",
+              "type": "language",
               "samples": [
                 "my language is {language}",
                 "in {language} please",
@@ -126,7 +126,65 @@
           ]
         }
       ],
-      "types": []
+      "types": [
+        {
+          "name": "language",
+          "values": [
+            {
+              "name": {
+                "value": "French",
+                "synonyms": ["France"]
+              }
+            },
+            {
+              "name": {
+                "value": "German",
+                "synonyms": ["Germany"]
+              }
+            },
+            {
+              "name": {
+                "value": "Canadian",
+                "synonyms": [
+                  "CA",
+                  "canada",
+                  "english canadian",
+                  "French canadian",
+                  "english CA"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Brittish",
+                "synonyms": [
+                  "cokney",
+                  "monty python",
+                  "united kingdom",
+                  "UK",
+                  "kings english",
+                  "brittish",
+                  "english UK"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "American",
+                "synonyms": [
+                  "hot dogs",
+                  "apple pie",
+                  "US",
+                  "english US",
+                  "english",
+                  "united states",
+                  "america"
+                ]
+              }
+            }
+          ]
+        }
+      ]
     },
     "dialog": {
       "intents": [
@@ -139,12 +197,18 @@
           "slots": [
             {
               "name": "language",
-              "type": "AMAZON.Language",
+              "type": "language",
               "confirmationRequired": false,
               "elicitationRequired": true,
               "prompts": {
                 "elicitation": "Elicit.Slot.PickLanguage.Language"
-              }
+              },
+              "validations": [
+                {
+                  "type": "hasEntityResolutionMatch",
+                  "prompt": "Slot.Validation.PickLanguage.Language.MustBeValid"
+                }
+              ]
             }
           ]
         }
@@ -198,6 +262,15 @@
           {
             "type": "PlainText",
             "value": "What language model did you want to hear this in?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.PickLanguage.Language.MustBeValid",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "I'm afraid I don't have a model for that language yet. Try one of the suggested language models."
           }
         ]
       }

@@ -9,9 +9,7 @@ const persistentAttributesAtStart = {
   newUser: true,
 };
 
-// this is useful for keeping track of what's in the menu
-// good for cards, or help, etc...
-const languages = ['English', 'British', 'French', 'German'];
+const languages = ['American', 'British', 'French', 'German', 'Canadian'];
 
 const responses = {
   launchResponse: {
@@ -73,7 +71,7 @@ const hints = [
 ];
 
 const audio = {
-  English: {
+  American: {
     url:
       'https://feeds.soundcloud.com/stream/547269666-mark-carpenter-6-en-us-au-apple-music-new-releases.mp3',
     token: '001',
@@ -92,6 +90,11 @@ const audio = {
     url:
       'https://feeds.soundcloud.com/stream/547287459-mark-carpenter-6-de-de-ca-apple-music-top-albums.mp3',
     token: '004',
+  },
+  Canadian: {
+    url:
+      'https://feeds.soundcloud.com/stream/547269444-mark-carpenter-6-en-ca-ag-apple-music-hot-tracks.mp3',
+    token: '005',
   },
 };
 
