@@ -56,19 +56,11 @@
           "samples": []
         },
         {
-          "name": "AMAZON.NextIntent",
-          "samples": []
-        },
-        {
           "name": "AMAZON.PageUpIntent",
           "samples": []
         },
         {
           "name": "AMAZON.PageDownIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.PreviousIntent",
           "samples": []
         },
         {
@@ -156,14 +148,14 @@
             },
             {
               "name": {
-                "value": "Brittish",
+                "value": "British",
                 "synonyms": [
                   "cokney",
                   "monty python",
                   "united kingdom",
                   "UK",
                   "kings english",
-                  "brittish",
+                  "british",
                   "english UK"
                 ]
               }

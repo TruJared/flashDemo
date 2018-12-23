@@ -61,13 +61,14 @@ const phrasePool = {
   ],
 };
 
+// todo add album info //
 const audio = {
   American: {
     url:
       'https://feeds.soundcloud.com/stream/547269666-mark-carpenter-6-en-us-au-apple-music-new-releases.mp3',
     token: '001',
   },
-  Brittish: {
+  British: {
     url:
       'https://feeds.soundcloud.com/stream/547267650-mark-carpenter-6-en-gb-us-ios-apps-top-free-ipad.mp3',
     token: '002',

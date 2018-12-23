@@ -1,5 +1,3 @@
-// >>> Start: Alexa Specific Functions <<< //
-
 const getLanguageString = languages => {
   const names = languages.map(x => x);
   names.splice(languages.length - 1, 0, 'or');
@@ -7,8 +5,9 @@ const getLanguageString = languages => {
   return languageString;
 };
 
+// >>> Start: Alexa Specific Functions <<< //
 /* eslint-disable */
-function getSlotValues(filledSlots) {
+const getSlotValues = function(filledSlots) {
   const slotValues = {};
 
   Object.keys(filledSlots).forEach(item => {
@@ -54,7 +53,7 @@ function getSlotValues(filledSlots) {
   }, this);
 
   return slotValues;
-}
+};
 
 const getSpokenValue = function(requestEnvelope, slotName) {
   if (
