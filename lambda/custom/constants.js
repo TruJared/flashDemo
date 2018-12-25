@@ -61,8 +61,14 @@ const phrasePool = {
   ],
 };
 
-// todo add album info //
 const audio = {
+  hint: '',
+  audioItemMeta: {
+    title: 'Sponsored By Koffee Kult',
+    subTitle: 'https://koffeekult.com',
+    albumArt: 'https://s3.amazonaws.com/flash-demo/kkSocialIcon.png',
+    backgroundImage: 'https://s3.amazonaws.com/flash-demo/kkBackground.jpg',
+  },
   American: {
     url:
       'https://feeds.soundcloud.com/stream/547269666-mark-carpenter-6-en-us-au-apple-music-new-releases.mp3',

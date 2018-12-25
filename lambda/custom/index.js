@@ -98,7 +98,7 @@ const PlayTrackIntentHandler = {
 
     const { url } = constants.audio[language];
     console.log(
-      `language ${language} url ${url}  token ${sessionAttributes.token}`
+      `language ${language} url ${url} token ${sessionAttributes.token}`
     );
 
     return AudioPlayerEventHandler.handle(handlerInput, url);
@@ -112,18 +112,50 @@ const AudioPlayerEventHandler = {
   },
   handle(handlerInput, url) {
     const { responseBuilder, requestEnvelope } = handlerInput;
+    const audioContext = requestEnvelope.request.type;
+    const {
+      title,
+      subTitle,
+      albumArt,
+      backgroundImage,
+    } = constants.audio.audioItemMeta;
 
-    // if already playing do nothing //
-    // this is just clearing system exception errors //
-    if (requestEnvelope.context.AudioPlayer.offsetInMilliseconds) {
-      return;
+    console.log(`
+    ${title},
+    ${subTitle},
+    ${albumArt},
+    ${backgroundImage},
+    `);
+
+    // ? what to do with all these requests ? //
+    // ! let's ignore most of them because we don't need them ! 👍 //
+    switch (audioContext) {
+      case 'AudioPlayer.PlaybackStarted' ||
+        'AudioPlayer.PlaybackStopped' ||
+        'AudioPlayer.PlaybackNearlyFinished':
+        // do nothing //
+        return responseBuilder.withShouldEndSession(true).getResponse();
+      case 'AudioPlayer.PlaybackStopped':
+        return CancelAndStopIntentHandler.handle(handlerInput);
+      case 'AudioPlayer.PlaybackFailed':
+        return ErrorHandler.handle(handlerInput);
+      default:
+        // if none of the above, then let's play a track
+        break;
     }
 
     return (
       responseBuilder
         .withShouldEndSession(true)
         // use url for token, when we resume can use token for url //
-        .addAudioPlayerPlayDirective('REPLACE_ALL', url, url, 0, null)
+        .addAudioPlayerPlayDirective('REPLACE_ALL', url, url, 0, null, {
+          title,
+          subTitle,
+          art: new Alexa.ImageHelper().addImageInstance(albumArt).getImage(),
+          // backgroundImage: new Alexa.ImageHelper()
+          //   .addImageInstance(backgroundImage)
+          //   .getImage(),
+        })
         .getResponse()
     );
   },
@@ -141,6 +173,12 @@ const ResumePlayingHandler = {
   },
   async handle(handlerInput) {
     const { requestEnvelope, responseBuilder } = handlerInput;
+    const {
+      title,
+      subTitle,
+      albumArt,
+      backgroundImage,
+    } = constants.audio.audioItemMeta;
     const { offsetInMilliseconds, token } = requestEnvelope.context.AudioPlayer;
 
     console.log(
@@ -152,12 +190,23 @@ const ResumePlayingHandler = {
         responseBuilder
           .withShouldEndSession(true)
           // using token for url like a boss //
+          // don't need audio meta, but using it anyway //
           .addAudioPlayerPlayDirective(
             'REPLACE_ALL',
             token,
             token,
             offsetInMilliseconds,
-            null
+            null,
+            {
+              title,
+              subTitle,
+              art: new Alexa.ImageHelper()
+                .addImageInstance(albumArt)
+                .getImage(),
+              // backgroundImage: new Alexa.ImageHelper()
+              //   .addImageInstance(backgroundImage)
+              //   .getImage(),
+            }
           )
           .getResponse()
       );
@@ -343,8 +392,11 @@ const SessionEndedRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
   },
   handle(handlerInput) {
+    const error =
+      handlerInput.requestEnvelope.request.error.message || 'no error';
     console.log(
-      `Session ended >>> Handler Input: ${JSON.stringify(handlerInput)}`
+      `Session ended >>> Error: ${error} <<<
+      Handler Input: ${JSON.stringify(handlerInput)}`
     );
   },
 };
@@ -375,10 +427,11 @@ const SystemExceptionHandler = {
     );
   },
   handle(handlerInput) {
+    const error =
+      handlerInput.requestEnvelope.request.error.message || 'no error';
     console.log(
-      `System Exception >>> Handler Input: ${JSON.stringify(
-        handlerInput.requestEnvelope
-      )}`
+      `System Exception >>> Error: ${error} <<<
+      Handler Input: ${JSON.stringify(handlerInput)}`
     );
   },
 };

@@ -33,7 +33,7 @@
             "codeUri": "lambda/custom",
             "functionName": "arn:aws:lambda:us-east-1:139829371454:function:ask-custom-flashDemo-default",
             "handler": "index.handler",
-            "revisionId": "37600d57-caf4-44f6-8095-87d8ae199455",
+            "revisionId": "e8bdb2f1-b13c-4a98-8224-6655c6cd41a2",
             "runtime": "nodejs8.10"
           }
         ]
