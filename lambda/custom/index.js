@@ -4,6 +4,16 @@ const constants = require('./constants');
 const functions = require('./functions');
 
 const { responses } = constants;
+const { logoUrl } = constants;
+const {
+  background,
+  smImgUrl,
+  lgImgUrl,
+  defaultTitle,
+  hintText,
+  noVideoSupport,
+} = constants.hasScreen;
+let displayParams = {};
 
 // todo add a simple sponsored by APL image //
 const LaunchRequestHandler = {
@@ -11,6 +21,7 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   async handle(handlerInput) {
+    // set it up //
     const { attributesManager, responseBuilder } = handlerInput;
     const sessionAttributes = attributesManager.getSessionAttributes();
     const persistentAttributes = await attributesManager.getPersistentAttributes();
@@ -19,19 +30,44 @@ const LaunchRequestHandler = {
       ? functions.shuffle(constants.phrasePool.salutation)[0]
       : responses.launchResponse.firstUse;
     persistentAttributes.passTo = 'PickLanguageIntent';
+    sessionAttributes.repeatText =
+      'Which language model would you like to hear this in?';
 
     // create language string
     const { languages } = constants;
     const languageString = functions.getLanguageString(languages);
 
+    // ? does user have display ? //
+    // * will return true or false * //
+    sessionAttributes.hasDisplay = !!functions.supportsDisplay(handlerInput);
+
+    // ? is new user ? //
     if (persistentAttributes.newUser) {
       persistentAttributes.newUser = false;
     }
-
-    sessionAttributes.repeatText =
-      'Which language model would you like to hear this in?';
-    // * just save it here: not used anywhere else * //
+    // * just save persistent here -> only using for new user * //
     await attributesManager.savePersistentAttributes();
+
+    // set up display params //
+    displayParams = {
+      logoUrl,
+      background,
+      smImgUrl,
+      lgImgUrl,
+      title: defaultTitle,
+      hintText,
+    };
+
+    if (sessionAttributes.hasDisplay) {
+      return responseBuilder
+        .speak(
+          `${salutation} ${speechText} ${languageString}
+          <break time="0.5s" /> Which language model would you like to hear this in?`
+        )
+        .reprompt('Which language model would you like to hear this in?')
+        .addDirective(functions.getDisplayData(displayParams))
+        .getResponse();
+    }
 
     return responseBuilder
       .speak(
@@ -43,7 +79,6 @@ const LaunchRequestHandler = {
   },
 };
 
-// todo how to handle user saying language that we don't have yet ?? //
 const PickLanguageInProgress = {
   canHandle(handlerInput) {
     const { request } = handlerInput.requestEnvelope;
@@ -71,7 +106,11 @@ const PickLanguageInfoCompleted = {
   },
   async handle(handlerInput) {
     const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+    const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
+    const slotValues = functions.getSlotValues(filledSlots);
+    const resolvedLanguage = slotValues.language.resolved;
     sessionAttributes.passTo = false;
+    sessionAttributes.language = resolvedLanguage;
 
     return PlayTrackIntentHandler.handle(handlerInput);
   },
@@ -89,17 +128,10 @@ const PlayTrackIntentHandler = {
     // just setting everything up here before passing to handler
     const { attributesManager } = handlerInput;
     const sessionAttributes = attributesManager.getSessionAttributes();
-    const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
-    const slotValues = functions.getSlotValues(filledSlots);
-    const resolvedLanguage = slotValues.language.resolved;
-    const language = constants.languages.includes(resolvedLanguage)
-      ? resolvedLanguage
-      : 'American';
+    const { language } = sessionAttributes;
 
     const { url } = constants.audio[language];
-    console.log(
-      `language ${language} url ${url} token ${sessionAttributes.token}`
-    );
+    console.log(`language ${language} url ${url}`);
 
     return AudioPlayerEventHandler.handle(handlerInput, url);
   },
@@ -152,9 +184,9 @@ const AudioPlayerEventHandler = {
           title,
           subTitle,
           art: new Alexa.ImageHelper().addImageInstance(albumArt).getImage(),
-          // backgroundImage: new Alexa.ImageHelper()
-          //   .addImageInstance(backgroundImage)
-          //   .getImage(),
+          backgroundImage: new Alexa.ImageHelper()
+            .addImageInstance(backgroundImage)
+            .getImage(),
         })
         .getResponse()
     );
@@ -203,9 +235,9 @@ const ResumePlayingHandler = {
               art: new Alexa.ImageHelper()
                 .addImageInstance(albumArt)
                 .getImage(),
-              // backgroundImage: new Alexa.ImageHelper()
-              //   .addImageInstance(backgroundImage)
-              //   .getImage(),
+              backgroundImage: new Alexa.ImageHelper()
+                .addImageInstance(backgroundImage)
+                .getImage(),
             }
           )
           .getResponse()

@@ -1,8 +1,78 @@
+const mainDoc = require('./main.json');
+
 const getLanguageString = languages => {
   const names = languages.map(x => x);
   names.splice(languages.length - 1, 0, 'or');
   const languageString = `${names.join(', ')}`;
   return languageString;
+};
+
+const getDisplayData = displayParams => {
+  if (!displayParams) {
+    // just end it right here //
+  }
+  const {
+    logoUrl,
+    background,
+    smImgUrl,
+    lgImgUrl,
+    title,
+    hintText,
+  } = displayParams;
+  const datasources = {
+    bodyTemplate7Data: {
+      type: 'object',
+      objectId: 'bt7Sample',
+      title,
+      backgroundImage: {
+        contentDescription: null,
+        smallSourceUrl: null,
+        largeSourceUrl: null,
+        sources: [
+          {
+            url: background,
+            size: 'small',
+            widthPixels: 0,
+            heightPixels: 0,
+          },
+          {
+            url: background,
+            size: 'large',
+            widthPixels: 0,
+            heightPixels: 0,
+          },
+        ],
+      },
+      image: {
+        contentDescription: null,
+        smallSourceUrl: null,
+        largeSourceUrl: null,
+        sources: [
+          {
+            url: smImgUrl,
+            size: 'small',
+            widthPixels: 0,
+            heightPixels: 0,
+          },
+          {
+            url: lgImgUrl,
+            size: 'large',
+            widthPixels: 0,
+            heightPixels: 0,
+          },
+        ],
+      },
+      logoUrl,
+      hintText,
+    },
+  };
+
+  return {
+    type: 'Alexa.Presentation.APL.RenderDocument',
+    version: '1.0',
+    document: mainDoc,
+    datasources,
+  };
 };
 
 // >>> Start: Alexa Specific Functions <<< //
@@ -126,6 +196,7 @@ const shuffle = a => {
 /* eslint-enable */
 
 module.exports = {
+  getDisplayData,
   getLanguageString,
   getSlotValues,
   supportsDisplay,

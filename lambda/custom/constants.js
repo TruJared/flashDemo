@@ -9,6 +9,17 @@ const persistentAttributesAtStart = {
   newUser: true,
 };
 
+const logoUrl = 'https://s3.amazonaws.com/flash-demo/icon_108_A2Z.png';
+
+const hasScreen = {
+  background: 'https://s3.amazonaws.com/flash-demo/genericBackground.jpg',
+  smImgUrl: 'https://s3.amazonaws.com/flash-demo/kkLogo.png',
+  lgImgUrl: 'https://s3.amazonaws.com/flash-demo/kkLogo.png',
+  defaultTitle: 'Special Thanks To Our Demo Sponsor Koffee Kult',
+  hintText: 'To Find Out More Email Mark at Email Address',
+  noVideoSupport: 'Sorry this device does not support video',
+};
+
 const languages = ['American', 'British', 'French', 'German', 'Canadian'];
 
 const responses = {
@@ -63,11 +74,12 @@ const phrasePool = {
 
 const audio = {
   hint: '',
+  // some of these meta items don't work ?? //
   audioItemMeta: {
     title: 'Sponsored By Koffee Kult',
-    subTitle: 'https://koffeekult.com',
+    subTitle: 'Visit: koffeekult.com',
     albumArt: 'https://s3.amazonaws.com/flash-demo/kkSocialIcon.png',
-    backgroundImage: 'https://s3.amazonaws.com/flash-demo/kkBackground.jpg',
+    backgroundImage: 'https://s3.amazonaws.com/flash-demo/kkLogo.png',
   },
   American: {
     url:
@@ -97,6 +109,8 @@ const audio = {
 };
 
 module.exports = {
+  logoUrl,
+  hasScreen,
   skill,
   languages,
   responses,
